@@ -4,36 +4,25 @@ from flask import Flask, request
 from flask_restx import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+from config import app, db
+from models import MovieSchema, Movie, DirectorSchema, Director, GenreSchema, Genre
 
 
-class Movie(db.Model):
-    __tablename__ = 'movie'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255))
-    description = db.Column(db.String(255))
-    trailer = db.Column(db.String(255))
-    year = db.Column(db.Integer)
-    rating = db.Column(db.Float)
-    genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
-    genre = db.relationship("Genre")
-    director_id = db.Column(db.Integer, db.ForeignKey("director.id"))
-    director = db.relationship("Director")
+api = Api(app)
+# создаем namespace
+movies_ns = api.namespace('movies')
+directors_ns = api.namespace('directors')
+genres_ns = api.namespace('genres')
 
-class Director(db.Model):
-    __tablename__ = 'director'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255))
+# Создаем экземпляр класса
+movie_schema = MovieSchema()
+movies_schema = MovieSchema(many=True)
+director_schema = DirectorSchema()
+directors_schema = DirectorSchema(many=True)
+genre_schema = GenreSchema()
+genres_schema = GenreSchema(many=True)
 
 
-class Genre(db.Model):
-    __tablename__ = 'genre'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255))
 
 
 
