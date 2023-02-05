@@ -1,9 +1,7 @@
 # app.py
 
-from flask import Flask, request
+from flask import request
 from flask_restx import Api, Resource
-from flask_sqlalchemy import SQLAlchemy
-from marshmallow import Schema, fields
 from config import app, db
 from models import MovieSchema, Movie, DirectorSchema, Director, GenreSchema, Genre
 
@@ -45,6 +43,7 @@ class MovieView(Resource):
             db.session.add(new_movies)
         return "", 201
 
+
 # запрос по id
 @movie_ns.route('/<int:uid>')
 class MovieView(Resource):
@@ -57,7 +56,8 @@ class MovieView(Resource):
         #  если запрос не верный
         except Exception:
             return "", 404
-###################################################################
+
+    #  put запрос
     def put(self, uid: int):
         try:
             movie = Movie.query.get(uid)
@@ -76,6 +76,7 @@ class MovieView(Resource):
         except Exception:
             return "", 400
 
+        #  del запрос
     def delete(self, uid: int):
         movie = Movie.query.get(uid)
         db.session.delete(movie)
@@ -85,10 +86,12 @@ class MovieView(Resource):
 
 @director_ns.route('/')
 class DirectorsView(Resource):
+    #  get запрос
     def get(self):
         all_director = Director.query.all()
         return directors_schema.dump(all_director), 200
 
+    #  post запрос
     def post(self):
         req_json = request.json
         new_director = Director(**req_json)
@@ -99,6 +102,7 @@ class DirectorsView(Resource):
 
 @director_ns.route('/<int:uid>')
 class DirectorView(Resource):
+    #  get запрос
     def get(self, uid: int):
         try:
             director = Director.query.get(uid)
@@ -106,6 +110,7 @@ class DirectorView(Resource):
         except Exception:
             return "", 404
 
+    #  put запрос
     def put(self, uid: int):
         try:
             director = Director.query.get(uid)
@@ -118,6 +123,7 @@ class DirectorView(Resource):
         except Exception:
             return "", 404
 
+    #  del запрос
     def delete(self, uid: int):
         director = Director.query.get(uid)
         db.session.delete(director)
@@ -127,10 +133,12 @@ class DirectorView(Resource):
 
 @genre_ns.route('/')
 class GenresView(Resource):
+    #  get запрос
     def get(self):
         all_genre = Genre.query.all()
         return genres_schema.dump(all_genre), 200
 
+    #  post запрос
     def post(self):
         req_json = request.json
         new_genre = Genre(**req_json)
@@ -141,6 +149,7 @@ class GenresView(Resource):
 
 @genre_ns.route('/<int:uid>')
 class GenreView(Resource):
+    #  get запрос *
     def get(self, uid: int):
         try:
             genre = Genre.query.get(uid)
@@ -148,6 +157,7 @@ class GenreView(Resource):
         except Exception:
             return "", 404
 
+    #  put запрос*
     def put(self, uid: int):
         try:
             genre = Genre.query.get(uid)
@@ -159,6 +169,7 @@ class GenreView(Resource):
         except Exception:
             return "", 404
 
+    #  del запрос
     def delete(self, uid: int):
         genre = Genre.query.get(uid)
         db.session.delete(genre)

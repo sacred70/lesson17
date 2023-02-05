@@ -2,6 +2,7 @@
 from marshmallow import Schema, fields
 from config import db
 
+
 class Movie(db.Model):
     __tablename__ = 'movie'
     id = db.Column(db.Integer, primary_key=True)
@@ -14,7 +15,6 @@ class Movie(db.Model):
     genre = db.relationship("Genre")
     director_id = db.Column(db.Integer, db.ForeignKey("director.id"))
     director = db.relationship("Director")
-
 
 
 class MovieSchema(Schema):
